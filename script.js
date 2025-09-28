@@ -1,27 +1,28 @@
-//your code here
 let timer = null;
-let startTime = 0;       // when stopwatch started
-let elapsedTime = 0;     // total time passed (ms)
+let startTime = 0;
+let elapsedTime = 0;
 let isPaused = false;
+
+function formatTime(ms) {
+  let hours = Math.floor(ms / (1000 * 60 * 60));
+  let minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((ms % (1000 * 60)) / 1000);
+
+  return (
+    String(hours).padStart(2, '0') + ":" +
+    String(minutes).padStart(2, '0') + ":" +
+    String(seconds).padStart(2, '0')
+  );
+}
 
 function updateTime() {
   const now = Date.now();
   const diff = now - startTime + elapsedTime;
-
-  let hours = Math.floor(diff / (1000 * 60 * 60));
-  let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  let seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-  // format HH:MM:SS
-  hours = String(hours).padStart(2, '0');
-  minutes = String(minutes).padStart(2, '0');
-  seconds = String(seconds).padStart(2, '0');
-
-  document.getElementById("time").textContent = `${hours}:${minutes}:${seconds}`;
+  document.getElementById("time").textContent = formatTime(diff);
 }
 
 function start() {
-  if (timer) return; // already running
+  if (timer) return;
 
   startTime = Date.now();
   timer = setInterval(updateTime, 100);
@@ -35,14 +36,12 @@ function pause() {
   const pauseBtn = document.getElementById("pause");
 
   if (!isPaused) {
-    // pause
     clearInterval(timer);
     timer = null;
     elapsedTime += Date.now() - startTime;
     isPaused = true;
     pauseBtn.textContent = "continue";
   } else {
-    // continue
     startTime = Date.now();
     timer = setInterval(updateTime, 100);
     isPaused = false;
@@ -62,6 +61,6 @@ function stop() {
   document.getElementById("start").disabled = false;
   document.getElementById("pause").disabled = true;
   document.getElementById("stop").disabled = true;
-
   document.getElementById("pause").textContent = "pause";
 }
+
